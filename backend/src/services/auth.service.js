@@ -1,42 +1,46 @@
-const bcrypt = require('bcrypt')
-const User = require('../models/User.model');
+const bcrypt = require("bcrypt");
+const User = require("../models/User.model");
+const ApiError = require("../utils/ApiError");
 
-const registerUser = async ({name, email, password}) => {
-    try{
-        const existingUser = await User.findOne({email});
-        if(existingUser){
-            throw new Error("User already exists")
-        }
-        const hashedPassword = await bcrypt.hash(password,10);
-        const user = await User.create({
-            name,
-            email,
-            password: hashedPassword,
-            role: "User"
-        })
-        return user;
+const registerUser = async ({ name, email, password }) => {
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+        throw new ApiError(409, "User already exists");
     }
 
-    catch(error){
-        throw new Error(error.message)
-    }
-}
-const loginUser = async({email, password}) =>{
-    try{
-        const user = await User.findOne({email});
-        if(!user){
-            throw new Error("User not found")
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        }
-        const isPasswordValid = bcrypt.compare(password, user.password)
-        if(!isPasswordValid){
-            throw new Error("Invalid Password")
-        }
-        return user;
+    const user = await User.create({
+        name,
+        email,
+        password: hashedPassword,
+        role: "User",
+    });
 
+    return user;
+};
+
+const loginUser = async ({ email, password }) => {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        throw new ApiError(401, "Invalid email or password");
     }
-    catch(error){
-        throw new Error(error.message)
+
+    const isPasswordValid = await bcrypt.compare(
+        password,
+        user.password
+    );
+
+    if (!isPasswordValid) {
+        throw new ApiError(401, "Invalid email or password");
     }
-}
-module.exports = {registerUser, loginUser}
+
+    return user;
+};
+
+module.exports = {
+    registerUser,
+    loginUser,
+};

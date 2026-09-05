@@ -1,5 +1,6 @@
 const express = require('express')
 const authRoutes = require('./routes/auth.routes')
+const errorMiddleware = require("./middleware/error.middleware");
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.get("/", (req, res) => {
 
 
 
+// Error handling middleware
+app.use(errorMiddleware);
 
 
 module.exports = app;
