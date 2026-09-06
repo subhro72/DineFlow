@@ -4,14 +4,14 @@ const asyncHandler = require("../utils/asyncHandler");
 const ApiError = require("../utils/ApiError");
 
 const registerController = asyncHandler(async(req, res) => {
-     const {name, email, password, confirmPassword } = req.body;
+     const {name, email, password, confirmPassword, role } = req.body;
 
     if(password !== confirmPassword){
         return res.status(400).json({
             message: "Passwords do not match"
         })
     }
-    const user = await authService.registerUser({name, email, password})
+    const user = await authService.registerUser({name, email, password, role})
     return res.status(201).json({success: true,
         message: "User registered successfully",
         user: {

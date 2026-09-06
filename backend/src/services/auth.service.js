@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User.model");
 const ApiError = require("../utils/ApiError");
 
-const registerUser = async ({ name, email, password }) => {
+const registerUser = async ({ name, email, password, role }) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
