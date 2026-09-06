@@ -10,6 +10,7 @@ const {
 
 const { protect } = require("../middleware/auth.middleware");
 const admin = require("../middleware/admin.middleware");
+const upload = require("../middleware/upload.middleware");
 
 const router = express.Router();
 
@@ -21,9 +22,21 @@ router.get("/:id", getMenuItemById);
 
 
 // Admin-only routes
-router.post("/", protect, admin, createMenuItem);
+router.post(
+    "/",
+    protect,
+    admin,
+    upload.single("image"),
+    createMenuItem
+);
 
-router.put("/:id", protect, admin, updateMenuItem);
+router.put(
+    "/:id",
+    protect,
+    admin,
+    upload.single("image"),
+    updateMenuItem
+);
 
 router.delete("/:id", protect, admin, deleteMenuItem);
 
