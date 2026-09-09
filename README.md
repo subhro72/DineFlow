@@ -159,11 +159,12 @@ The menu details page displays:
 
 ### Frontend
 
+- Vite
 - React.js
 - React Router DOM
 - JavaScript
 - Axios
-- Tailwind CSS
+- Tailwind CSS v4
 - React `useState`
 - React `useEffect`
 
