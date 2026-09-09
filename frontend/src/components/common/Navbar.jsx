@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -7,32 +8,39 @@ export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Get logged-in user from localStorage
   const { user, isLoggedIn, logout } = useAuth();
+
   const links = [
     { label: 'Home', path: '/' },
     { label: 'Menu', path: '/menu' },
   ];
 
   const isActive = (path) => {
-    if (path === '/' && location.pathname !== '/') return false;
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+
     return location.pathname.startsWith(path);
   };
 
   const handleLogout = () => {
-  logout();
-  setMenuOpen(false);
-  navigate('/login');
-};
+    logout();
+    setMenuOpen(false);
+    navigate('/login');
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-warm-white/95 backdrop-blur-sm border-b border-border">
       <div className="w-full px-4 md:px-6 lg:px-8 flex items-center justify-between h-16">
 
         {/* Logo */}
         <Link
-          to="/"
+          to={user?.role === 'Admin' ? '/admin-dashboard' : '/'}
           className="font-sora font-700 text-xl text-charcoal tracking-tight hover:text-forest transition-colors"
-          style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700 }}
+          style={{
+            fontFamily: 'Sora, sans-serif',
+            fontWeight: 700
+          }}
         >
           Dine<span className="text-terracotta">Flow</span>
         </Link>
@@ -45,8 +53,8 @@ export default function Navbar() {
               to={link.path}
               className={`text-sm font-medium transition-colors ${
                 isActive(link.path)
-                  ? 'text-forest'
-                  : 'text-sage hover:text-charcoal'
+                  ? 'text-forest font-semibold'
+                  : 'text-charcoal hover:text-forest'
               }`}
             >
               {link.label}
@@ -65,8 +73,8 @@ export default function Navbar() {
 
               {user.role === 'Admin' && (
                 <Link
-                  to="/admin/dashboard"
-                  className="text-sm font-medium text-sage hover:text-charcoal transition-colors px-4 py-2"
+                  to="/admin-dashboard"
+                  className="text-sm font-medium text-charcoal hover:text-forest transition-colors px-4 py-2"
                 >
                   Dashboard
                 </Link>
@@ -83,7 +91,7 @@ export default function Navbar() {
             <>
               <Link
                 to="/login"
-                className="text-sm font-medium text-sage hover:text-charcoal transition-colors px-4 py-2"
+                className="text-sm font-medium text-charcoal hover:text-forest transition-colors px-4 py-2"
               >
                 Sign In
               </Link>
@@ -101,7 +109,7 @@ export default function Navbar() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 text-sage hover:text-charcoal"
+          className="md:hidden p-2 text-charcoal hover:text-forest transition-colors"
           onClick={() => setMenuOpen(o => !o)}
           aria-label="Toggle menu"
         >
@@ -143,8 +151,8 @@ export default function Navbar() {
               onClick={() => setMenuOpen(false)}
               className={`text-sm font-medium text-left transition-colors ${
                 isActive(link.path)
-                  ? 'text-forest'
-                  : 'text-sage hover:text-charcoal'
+                  ? 'text-forest font-semibold'
+                  : 'text-charcoal hover:text-forest'
               }`}
             >
               {link.label}
@@ -163,7 +171,7 @@ export default function Navbar() {
                   <Link
                     to="/admin/dashboard"
                     onClick={() => setMenuOpen(false)}
-                    className="text-sm font-medium text-sage hover:text-charcoal text-left"
+                    className="text-sm font-medium text-charcoal hover:text-forest text-left"
                   >
                     Dashboard
                   </Link>
@@ -181,7 +189,7 @@ export default function Navbar() {
                 <Link
                   to="/login"
                   onClick={() => setMenuOpen(false)}
-                  className="text-sm font-medium text-sage hover:text-charcoal text-left"
+                  className="text-sm font-medium text-charcoal hover:text-forest text-left"
                 >
                   Sign In
                 </Link>
@@ -202,3 +210,4 @@ export default function Navbar() {
     </nav>
   );
 }
+
