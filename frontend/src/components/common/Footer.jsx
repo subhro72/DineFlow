@@ -39,9 +39,9 @@ export default function Footer() {
           <div>
             <div className="text-xs font-semibold uppercase tracking-widest text-sage mb-4">Contact</div>
             <div className="flex flex-col gap-3 text-sm text-sage">
-              <span>hello@dineflow.co</span>
-              <span>+1 (800) 346-3569</span>
-              <span>24 Culinary Square<br />New York, NY 10001</span>
+              <span>subhro@example.com</span>
+              <span>+91-987654321</span>
+              <span>Subhro's Home<br />Kolkata, West Bengal 700001</span>
             </div>
           </div>
         </div>

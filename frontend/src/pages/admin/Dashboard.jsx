@@ -309,34 +309,6 @@ export default function Dashboard() {
                   );
                 })}
               </div>
-
-              {/* System Status */}
-              <div className="bg-forest rounded-xl p-5 text-warm-white">
-                <div className="text-xs font-semibold uppercase tracking-wider text-white/60 mb-3">
-                  System Status
-                </div>
-
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-
-                  <span className="text-sm font-medium">
-                    {error
-                      ? 'Backend connection issue'
-                      : loading
-                        ? 'Checking system...'
-                        : 'All systems operational'}
-                  </span>
-                </div>
-
-                <div className="text-xs text-white/50">
-                  Backend API connected
-                </div>
-
-                <div className="mt-4 pt-4 border-t border-white/10 text-xs text-white/50">
-                  DineFlow Management System
-                </div>
-              </div>
-
             </div>
           </div>
         </main>
