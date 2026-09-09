@@ -16,6 +16,7 @@ const registerController = asyncHandler(async(req, res) => {
         message: "User registered successfully",
         user: {
             id: user._id,
+            name: user.name,
             email: user.email,
             role: user.role
         }
@@ -31,6 +32,7 @@ const loginController = asyncHandler(async (req, res) => {
             token,
             user: {
                 id: user._id,
+                name: user.name,
                 email: user.email,
                 role: user.role
             }
