@@ -40,5 +40,9 @@ yarn-error.log*
 next-env.d.ts
 
 
+Design.md
 
+# AI configuration
+.gemini/
+.agents/
 
