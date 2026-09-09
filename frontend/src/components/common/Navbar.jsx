@@ -1,12 +1,16 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const profileRef = useRef(null);
 
   const { user, isLoggedIn, logout } = useAuth();
 
@@ -14,6 +18,8 @@ export default function Navbar() {
     { label: 'Home', path: '/' },
     { label: 'Menu', path: '/menu' },
   ];
+
+  const isAdmin = user?.role === 'Admin';
 
   const isActive = (path) => {
     if (path === '/') {
@@ -23,10 +29,40 @@ export default function Navbar() {
     return location.pathname.startsWith(path);
   };
 
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener(
+        'mousedown',
+        handleClickOutside
+      );
+    };
+  }, []);
+
   const handleLogout = () => {
     logout();
     setMenuOpen(false);
+    setProfileOpen(false);
     navigate('/login');
+  };
+
+  const getFirstName = () => {
+    if (!user?.name) {
+      return isAdmin ? 'Admin' : 'User';
+    }
+
+    return user.name.split(' ')[0];
   };
 
   return (
@@ -35,11 +71,15 @@ export default function Navbar() {
 
         {/* Logo */}
         <Link
-          to={user?.role === 'Admin' ? '/admin-dashboard' : '/'}
+          to={isAdmin ? '/admin-dashboard' : '/'}
           className="font-sora font-700 text-xl text-charcoal tracking-tight hover:text-forest transition-colors"
           style={{
             fontFamily: 'Sora, sans-serif',
             fontWeight: 700
+          }}
+          onClick={() => {
+            setProfileOpen(false);
+            setMenuOpen(false);
           }}
         >
           Dine<span className="text-terracotta">Flow</span>
@@ -47,6 +87,7 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
+
           {links.map(link => (
             <Link
               key={link.path}
@@ -60,33 +101,179 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* Admin Dashboard */}
+          {isAdmin && (
+            <Link
+              to="/admin-dashboard"
+              className={`text-sm font-medium transition-colors ${
+                isActive('/admin-dashboard')
+                  ? 'text-forest font-semibold'
+                  : 'text-charcoal hover:text-forest'
+              }`}
+            >
+              Dashboard
+            </Link>
+          )}
+
         </div>
 
         {/* Desktop Authentication */}
         <div className="hidden md:flex items-center gap-3">
 
           {isLoggedIn ? (
-            <>
-              <span className="text-sm font-medium text-sage">
-                {user.email}
+            <div
+              ref={profileRef}
+              className="relative flex items-center gap-3"
+            >
+
+              {/* Greeting */}
+              <span className="text-sm font-medium text-charcoal">
+                Hello, {getFirstName()}!
               </span>
 
-              {user.role === 'Admin' && (
-                <Link
-                  to="/admin-dashboard"
-                  className="text-sm font-medium text-charcoal hover:text-forest transition-colors px-4 py-2"
+              {/* Profile Button */}
+              <button
+                type="button"
+                onClick={() =>
+                  setProfileOpen(prev => !prev)
+                }
+                className="w-10 h-10 rounded-full bg-forest text-warm-white flex items-center justify-center hover:bg-forest-dark transition-colors"
+                aria-label="Open profile"
+                aria-expanded={profileOpen}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
                 >
-                  Dashboard
-                </Link>
+                  <circle
+                    cx="12"
+                    cy="8"
+                    r="4"
+                  />
+                  <path
+                    d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
+                  />
+                </svg>
+              </button>
+
+              {/* Profile Dropdown */}
+              {profileOpen && (
+                <div className="absolute right-0 top-12 w-72 bg-warm-white border border-border rounded-xl shadow-lg overflow-hidden z-50">
+
+                  {/* Profile Header */}
+                  <div className="px-5 py-4 bg-ivory border-b border-border">
+
+                    <div className="flex items-center gap-3">
+
+                      <div className="w-11 h-11 rounded-full bg-forest text-warm-white flex items-center justify-center shrink-0">
+                        <svg
+                          width="21"
+                          height="21"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        >
+                          <circle
+                            cx="12"
+                            cy="8"
+                            r="4"
+                          />
+                          <path
+                            d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
+                          />
+                        </svg>
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-charcoal truncate">
+                          {user?.name || 'User'}
+                        </p>
+
+                        <p className="text-xs text-sage">
+                          {user?.name || 'User'}
+                        </p>
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  {/* User Details */}
+                  <div className="px-5 py-4 space-y-4">
+
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-sage mb-1">
+                        Name
+                      </p>
+
+                      <p className="text-sm font-medium text-charcoal">
+                        {user?.name || 'Not available'}
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-sage mb-1">
+                        Email
+                      </p>
+
+                      <p className="text-sm text-charcoal break-all">
+                        {user?.email || 'Not available'}
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-sage mb-1">
+                        Role
+                      </p>
+
+                      <p className="text-sm font-medium text-charcoal">
+                        {user?.role || 'User'}
+                      </p>
+                    </div>
+
+                  </div>
+
+                  {/* Logout */}
+                  <div className="border-t border-border p-3">
+
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-charcoal hover:bg-red-50 hover:text-red-600 transition-colors"
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                      >
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line
+                          x1="21"
+                          y1="12"
+                          x2="9"
+                          y2="12"
+                        />
+                      </svg>
+
+                      Logout
+                    </button>
+
+                  </div>
+
+                </div>
               )}
 
-              <button
-                onClick={handleLogout}
-                className="text-sm font-medium bg-forest text-warm-white px-4 py-2 rounded-xl hover:bg-forest-dark transition-colors"
-              >
-                Logout
-              </button>
-            </>
+            </div>
           ) : (
             <>
               <Link
@@ -159,30 +346,121 @@ export default function Navbar() {
             </Link>
           ))}
 
+          {/* Mobile Admin Dashboard */}
+          {isAdmin && (
+            <Link
+              to="/admin-dashboard"
+              onClick={() => setMenuOpen(false)}
+              className={`text-sm font-medium text-left transition-colors ${
+                isActive('/admin-dashboard')
+                  ? 'text-forest font-semibold'
+                  : 'text-charcoal hover:text-forest'
+              }`}
+            >
+              Dashboard
+            </Link>
+          )}
+
           <div className="border-t border-border pt-4 flex flex-col gap-3">
 
             {isLoggedIn ? (
               <>
-                <span className="text-sm font-medium text-sage">
-                  {user.email}
-                </span>
+                {/* Mobile User Info */}
+                <div className="flex items-center gap-3">
 
-                {user.role === 'Admin' && (
-                  <Link
-                    to="/admin/dashboard"
-                    onClick={() => setMenuOpen(false)}
-                    className="text-sm font-medium text-charcoal hover:text-forest text-left"
-                  >
-                    Dashboard
-                  </Link>
-                )}
+                  <div className="w-10 h-10 rounded-full bg-forest text-warm-white flex items-center justify-center shrink-0">
+                    <svg
+                      width="19"
+                      height="19"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                    >
+                      <circle
+                        cx="12"
+                        cy="8"
+                        r="4"
+                      />
+                      <path
+                        d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
+                      />
+                    </svg>
+                  </div>
 
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-charcoal">
+                      Hello, {getFirstName()}!
+                    </p>
+
+                    <p className="text-xs text-sage truncate">
+                      {user?.email}
+                    </p>
+                  </div>
+
+                </div>
+
+                {/* Mobile User Details */}
+                <div className="bg-ivory border border-border rounded-xl p-4 space-y-3">
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-sage">
+                      Name
+                    </p>
+
+                    <p className="text-sm font-medium text-charcoal mt-1">
+                      {user?.name || 'Not available'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-sage">
+                      Email
+                    </p>
+
+                    <p className="text-sm text-charcoal break-all mt-1">
+                      {user?.email || 'Not available'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-sage">
+                      Role
+                    </p>
+
+                    <p className="text-sm font-medium text-charcoal mt-1">
+                      {user?.role || 'User'}
+                    </p>
+                  </div>
+
+                </div>
+
+                {/* Mobile Logout */}
                 <button
                   onClick={handleLogout}
-                  className="text-sm font-medium bg-forest text-warm-white px-4 py-2 rounded-xl text-center hover:bg-forest-dark transition-colors"
+                  className="w-full flex items-center justify-center gap-2 text-sm font-medium bg-forest text-warm-white px-4 py-2.5 rounded-xl hover:bg-forest-dark transition-colors"
                 >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line
+                      x1="21"
+                      y1="12"
+                      x2="9"
+                      y2="12"
+                    />
+                  </svg>
+
                   Logout
                 </button>
+
               </>
             ) : (
               <>
@@ -207,6 +485,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
     </nav>
   );
 }
