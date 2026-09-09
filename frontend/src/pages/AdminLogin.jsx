@@ -1,24 +1,57 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../services/authService';
+import { useAuth } from '../context/AuthContext';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: '', password: '' });
+  const { login } = useAuth();
+
+  const [form, setForm] = useState({
+    email: '',
+    password: ''
+  });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
     if (!form.email || !form.password) {
       setError('Please fill in all fields.');
       return;
     }
-    setLoading(true);
-    setTimeout(() => {
+
+    try {
+      setLoading(true);
+
+      const data = await loginUser({
+        email: form.email,
+        password: form.password
+      });
+
+      // Only Admin users can access this portal
+      if (data.user.role !== 'Admin') {
+        setError('Access denied. Admin privileges are required.');
+        return;
+      }
+
+      // Store authentication through AuthContext
+      login(data.token, data.user);
+
+      // Go to Admin Dashboard
+      navigate('/admin-dashboard');
+
+    } catch (error) {
+      setError(
+        error.response?.data?.message ||
+        'Invalid email or password.'
+      );
+    } finally {
       setLoading(false);
-      navigate('/admin/dashboard');
-    }, 1200);
+    }
   };
 
   return (
@@ -34,40 +67,67 @@ export default function AdminLogin() {
           }}
         />
         <div className="absolute inset-0 bg-forest-dark/70" />
+
         <div className="relative">
-          <div className="font-sora text-2xl font-bold text-warm-white" style={{ fontFamily: 'Sora, sans-serif' }}>
+          <div
+            className="font-sora text-2xl font-bold text-warm-white"
+            style={{ fontFamily: 'Sora, sans-serif' }}
+          >
             Dine<span className="text-terracotta">Flow</span>
           </div>
         </div>
+
         <div className="relative">
           <blockquote className="text-white/80 text-lg leading-relaxed italic mb-4">
             "DineFlow transformed how we manage nightly service. Our team operates with confidence and our guests feel the difference."
           </blockquote>
-          <div className="text-white/50 text-sm">— Eleanor Whitmore, Executive Chef, The Ivory Table</div>
+
+          <div className="text-white/50 text-sm">
+            — Eleanor Whitmore, Executive Chef, The Ivory Table
+          </div>
         </div>
       </div>
 
       {/* Right panel */}
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-ivory">
         <div className="w-full max-w-sm">
+
           <div className="lg:hidden mb-8">
-            <div className="font-sora text-xl font-bold text-charcoal" style={{ fontFamily: 'Sora, sans-serif' }}>
+            <div
+              className="font-sora text-xl font-bold text-charcoal"
+              style={{ fontFamily: 'Sora, sans-serif' }}
+            >
               Dine<span className="text-terracotta">Flow</span>
             </div>
           </div>
 
           <div className="mb-8">
             <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-sage border border-border px-2.5 py-1.5 rounded-xl mb-4">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
+
               Admin Portal
             </div>
-            <h1 className="text-2xl font-bold text-charcoal mb-1" style={{ fontFamily: 'Sora, sans-serif' }}>
+
+            <h1
+              className="text-2xl font-bold text-charcoal mb-1"
+              style={{ fontFamily: 'Sora, sans-serif' }}
+            >
               Administration
             </h1>
-            <p className="text-sm text-sage">Restricted access — authorised personnel only</p>
+
+            <p className="text-sm text-sage">
+              Restricted access — authorised personnel only
+            </p>
           </div>
 
           {error && (
@@ -77,30 +137,45 @@ export default function AdminLogin() {
           )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+
             <div>
               <label className="block text-xs font-semibold text-charcoal mb-1.5 uppercase tracking-wider">
                 Admin Email
               </label>
+
               <input
                 type="email"
                 value={form.email}
-                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    email: e.target.value
+                  }))
+                }
                 placeholder="admin@dineflow.co"
                 className="w-full px-3 py-2.5 text-sm border border-border rounded-xl bg-warm-white text-charcoal placeholder-sage focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest/20 transition-colors"
               />
             </div>
+
             <div>
               <label className="block text-xs font-semibold text-charcoal mb-1.5 uppercase tracking-wider">
                 Password
               </label>
+
               <input
                 type="password"
                 value={form.password}
-                onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    password: e.target.value
+                  }))
+                }
                 placeholder="••••••••"
                 className="w-full px-3 py-2.5 text-sm border border-border rounded-xl bg-warm-white text-charcoal placeholder-sage focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest/20 transition-colors"
               />
             </div>
+
             <button
               type="submit"
               disabled={loading}
@@ -111,8 +186,11 @@ export default function AdminLogin() {
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   Authenticating…
                 </>
-              ) : 'Access Admin Panel'}
+              ) : (
+                'Access Admin Panel'
+              )}
             </button>
+
           </form>
 
           <div className="mt-6 text-center">
@@ -123,6 +201,7 @@ export default function AdminLogin() {
               ← Back to guest login
             </button>
           </div>
+
         </div>
       </div>
     </div>

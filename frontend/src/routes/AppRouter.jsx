@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import AdminRoute from "./AdminRoute";
 
 // Public Pages
 import Home from "../pages/Home";
@@ -25,15 +26,17 @@ function AppRouter() {
                 <Route path="/menu/:id" element={<MenuDetails />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin-login" element={<AdminLogin />} />
 
                 {/* Admin Routes */}
-                <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-                <Route path="/admin/dashboard" element={<Dashboard />} />
-                <Route path="/admin/menu-items" element={<MenuItems />} />
-                <Route path="/admin/menu-items/add" element={<AddMenuItem />} />
-                <Route path="/admin/menu-items/edit/:id" element={<EditMenuItem />} />
-                <Route path="/admin/users" element={<Users />} />
+                <Route element={<AdminRoute />}>
+    <Route path="/admin" element={<Navigate to="/admin-dashboard" replace />} />
+    <Route path="/admin-dashboard" element={<Dashboard />} />
+    <Route path="/admin/menu-items" element={<MenuItems />} />
+    <Route path="/admin/menu-items/add" element={<AddMenuItem />} />
+    <Route path="/admin/menu-items/edit/:id" element={<EditMenuItem />} />
+    <Route path="/admin/users" element={<Users />} />
+</Route>
             </Routes>
         </BrowserRouter>
     );
