@@ -5,6 +5,13 @@ const userRoutes = require("./routes/user.routes");
 const errorMiddleware = require("./middleware/error.middleware");
 
 const app = express();
+const cors = require("cors");
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
