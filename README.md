@@ -1,5 +1,7 @@
 # DineFlow — Restaurant Management System
 
+**🔗 Live Demo:** [https://dineflow-project.vercel.app](https://dineflow-project.vercel.app)
+
 A full-stack **MERN-based Restaurant Management System** that allows administrators to manage menu items and users through a secure dashboard, while registered users and public visitors can browse the restaurant menu.
 
 ---
@@ -387,6 +389,8 @@ The frontend and backend will run as separate development servers.
 - User Register
 - User Login
 - Admin Login
+- Privacy Policy
+- Terms of Service
 
 ### Admin Pages
 
@@ -437,8 +441,4 @@ Potential future additions include:
 
 Built as a MERN Stack project for learning and portfolio development.
 
----
 
-## 📄 License
-
-This project is licensed under the **ISC License**.
