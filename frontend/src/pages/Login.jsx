@@ -133,13 +133,7 @@ login(data.token, data.user);
               {/* Remember Me / Forgot Password */}
               <div className="flex items-center justify-between mt-1">
 
-                <label className="flex items-center gap-2 text-xs text-sage cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="accent-forest"
-                  />
-                  Remember me
-                </label>
+              
 
                 <span className="text-xs text-forest hover:underline cursor-pointer font-medium">
                   Forgot password?
