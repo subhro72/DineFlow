@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const User = require("../models/User.model");
+const User = require("../models/user.model");
 const ApiError = require("../utils/ApiError");
 
 const registerUser = async ({ name, email, password, role }) => {
