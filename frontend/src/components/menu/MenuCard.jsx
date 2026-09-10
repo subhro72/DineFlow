@@ -13,12 +13,12 @@ export default function MenuCard({ item }) {
       onClick={() => navigate(`/menu/${item._id || item.id}`)}
     >
       {/* Food Image */}
-    <div className="relative overflow-hidden bg-ivory aspect-[16/10]">
-  <img
-    src={item.image}
-    alt={item.name}
-    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-  />
+      <div className="relative overflow-hidden bg-ivory aspect-[16/10]">
+        <img
+          src={item.image}
+          alt={item.name}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
 
         {/* Availability Badge */}
         <div className="absolute top-3 left-3">
@@ -63,7 +63,7 @@ export default function MenuCard({ item }) {
         {/* Price + Details */}
         <div className="flex items-center justify-between">
           <span className="text-lg font-semibold text-charcoal">
-            ${Number(item.price).toFixed(2)}
+            ₹{Number(item.price).toFixed(2)}
           </span>
 
           <span className="text-xs text-terracotta font-medium hover:underline">
@@ -74,4 +74,3 @@ export default function MenuCard({ item }) {
     </div>
   );
 }
-
