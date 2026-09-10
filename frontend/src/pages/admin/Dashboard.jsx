@@ -1,19 +1,15 @@
 
 import { useAuth } from "../../context/AuthContext";
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import AdminTopbar from '../../components/admin/AdminTopbar';
 import StatCard from '../../components/admin/StatCard';
 import api from '../../services/api';
 
-const RECENT_ACTIVITY = [
-  { id: 1, action: 'New user registered', detail: 'Recent registration', time: 'Recently', type: 'user' },
-  { id: 2, action: 'Menu management active', detail: 'Menu data is connected to the backend', time: 'Now', type: 'menu' },
-  { id: 3, action: 'System status', detail: 'Backend API connection active', time: 'Now', type: 'menu' },
-];
-
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const [menuItems, setMenuItems] = useState([]);
   const [users, setUsers] = useState([]);
@@ -177,85 +173,69 @@ export default function Dashboard() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            {/* Recent Activity */}
+            {/* Recently Added Menu Items */}
             <div className="lg:col-span-2 bg-warm-white border border-border rounded-xl">
-              <div className="px-5 py-4 border-b border-border">
+              <div className="px-5 py-4 border-b border-border flex items-center justify-between">
                 <h2
                   className="text-sm font-semibold text-charcoal"
                   style={{ fontFamily: 'Sora, sans-serif' }}
                 >
-                  Recent Activity
+                  Recently Added
                 </h2>
+
+                <button
+                  onClick={() => navigate('/admin/menu-items')}
+                  className="text-xs text-forest font-medium hover:text-forest-dark transition-colors"
+                >
+                  View All →
+                </button>
               </div>
 
               <div className="divide-y divide-border">
-                {RECENT_ACTIVITY.map(item => (
-                  <div
-                    key={item.id}
-                    className="flex items-start gap-4 px-5 py-3.5"
-                  >
-                    <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                        item.type === 'user'
-                          ? 'bg-forest/10 text-forest'
-                          : item.type === 'delete'
-                            ? 'bg-terracotta/10 text-terracotta'
-                            : 'bg-sage/10 text-sage'
-                      }`}
-                    >
-                      {item.type === 'user' ? (
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                        >
-                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                          <circle cx="12" cy="7" r="4" />
-                        </svg>
-                      ) : item.type === 'delete' ? (
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                        >
-                          <polyline points="3 6 5 6 21 6" />
-                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                        </svg>
-                      ) : (
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                        >
-                          <path d="M3 6h18M3 12h18M3 18h18" />
-                        </svg>
-                      )}
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-charcoal">
-                        {item.action}
-                      </div>
-
-                      <div className="text-xs text-sage truncate">
-                        {item.detail}
-                      </div>
-                    </div>
-
-                    <div className="text-xs text-sage whitespace-nowrap">
-                      {item.time}
-                    </div>
+                {loading ? (
+                  <div className="px-5 py-8 text-center text-xs text-sage">
+                    Loading recent menu items...
                   </div>
-                ))}
+                ) : menuItems.length === 0 ? (
+                  <div className="px-5 py-8 text-center text-xs text-sage">
+                    No menu items added yet.
+                  </div>
+                ) : (
+                  menuItems.slice(0, 5).map(item => (
+                    <div
+                      key={item._id}
+                      className="flex items-center gap-4 px-5 py-3.5"
+                    >
+                      <div className="w-12 h-12 rounded-lg overflow-hidden bg-ivory border border-border shrink-0">
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-xs text-sage">
+                            No image
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-charcoal truncate">
+                          {item.name}
+                        </div>
+
+                        <div className="text-xs text-sage">
+                          {item.category}
+                        </div>
+                      </div>
+
+                      <div className="text-sm font-semibold text-charcoal whitespace-nowrap">
+                        ₹{Number(item.price).toFixed(2)}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
