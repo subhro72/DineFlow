@@ -10,7 +10,7 @@ app.use(
     cors({
         origin: [
             "http://localhost:5173",
-            "https://dineflow-project.vercel.app/",
+            "https://dineflow-project.vercel.app",
         ],
         credentials: true,
     })
