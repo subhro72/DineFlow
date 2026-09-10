@@ -8,6 +8,7 @@ import MenuCard from '../components/menu/MenuCard';
 
 import { HERO_IMAGE } from '../utils/mockData';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const BENEFITS = [
   {
@@ -24,7 +25,7 @@ const BENEFITS = [
       </svg>
     ),
     title: 'Smart Menu Management',
-    desc: 'Update items, pricing, and availability across all channels instantly — no downtime, no confusion.',
+    desc: 'Manage dishes, prices, availability, and images from one place.',
   },
   {
     icon: (
@@ -36,13 +37,12 @@ const BENEFITS = [
         stroke="currentColor"
         strokeWidth="1.8"
       >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <path d="M7 8h10M7 12h6M7 16h4" />
       </svg>
     ),
-    title: 'Guest-Centric Profiles',
-    desc: 'Know your guests. Preferences, dietary notes, visit history — all in one elegant dashboard.',
+    title: 'Simple Admin Dashboard',
+    desc: 'Get a quick overview of your menu and registered users.',
   },
   {
     icon: (
@@ -54,11 +54,14 @@ const BENEFITS = [
         stroke="currentColor"
         strokeWidth="1.8"
       >
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+        <path d="M4 11a8 8 0 0 1 16 0" />
+        <path d="M4 11v5a2 2 0 0 0 2 2h1" />
+        <path d="M20 11v5a2 2 0 0 1-2 2h-1" />
+        <path d="M9 18h6" />
       </svg>
     ),
-    title: 'Real-Time Analytics',
-    desc: 'Track covers, revenue, and popular dishes with beautiful, actionable reporting built for owners.',
+    title: 'Easy Guest Experience',
+    desc: 'Let customers browse the menu and view detailed dishes without logging in.',
   },
   {
     icon: (
@@ -70,17 +73,19 @@ const BENEFITS = [
         stroke="currentColor"
         strokeWidth="1.8"
       >
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 6v6l4 2" />
+        <rect x="5" y="11" width="14" height="10" rx="2" />
+        <path d="M8 11V8a4 4 0 0 1 8 0v3" />
       </svg>
     ),
-    title: 'Reservation Flow',
-    desc: 'A refined booking experience that reflects your brand — from online widget to floor-plan management.',
+    title: 'Secure Authentication',
+    desc: 'Separate admin and user access with protected routes and JWT authentication.',
   },
 ];
 
 export default function Home() {
   const navigate = useNavigate();
+
+  const { user, isLoggedIn } = useAuth();
 
   const [menuItems, setMenuItems] = useState([]);
   const [loadingMenu, setLoadingMenu] = useState(true);
@@ -150,6 +155,30 @@ export default function Home() {
     };
   });
 
+  // Decide the primary CTA based on authentication state
+  const getPrimaryCta = () => {
+    if (!isLoggedIn) {
+      return {
+        label: 'Start Free Trial',
+        action: () => navigate('/register'),
+      };
+    }
+
+    if (user?.role === 'Admin') {
+      return {
+        label: 'Go to Dashboard',
+        action: () => navigate('/admin-dashboard'),
+      };
+    }
+
+    return {
+      label: 'Browse Menu',
+      action: () => navigate('/menu'),
+    };
+  };
+
+  const primaryCta = getPrimaryCta();
+
   return (
     <div className="min-h-screen flex flex-col bg-ivory">
       <Navbar />
@@ -195,19 +224,23 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-3">
+              {/* Dynamic Primary CTA */}
               <button
-                onClick={() => navigate('/register')}
+                onClick={primaryCta.action}
                 className="bg-terracotta hover:bg-terracotta-dark text-warm-white text-sm font-semibold px-6 py-3 rounded-xl transition-colors"
               >
-                Start Free Trial
+                {primaryCta.label}
               </button>
 
-              <button
-                onClick={() => navigate('/menu')}
-                className="border border-white/40 hover:border-white/70 text-warm-white text-sm font-medium px-6 py-3 rounded-xl transition-colors"
-              >
-                Browse Menu
-              </button>
+              {/* Secondary Browse Menu button */}
+              {primaryCta.label !== 'Browse Menu' && (
+                <button
+                  onClick={() => navigate('/menu')}
+                  className="border border-white/40 hover:border-white/70 text-warm-white text-sm font-medium px-6 py-3 rounded-xl transition-colors"
+                >
+                  Browse Menu
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -359,7 +392,7 @@ export default function Home() {
             className="text-3xl font-bold text-charcoal"
             style={{ fontFamily: 'Sora, sans-serif' }}
           >
-            Built for Premium Hospitality
+            Built for Smarter Restaurant Management
           </h2>
         </div>
 
@@ -391,34 +424,30 @@ export default function Home() {
       </section>
 
       {/* CTA Banner */}
-      <section className="bg-forest text-warm-white py-16">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2
-            className="text-3xl font-bold mb-4"
-            style={{ fontFamily: 'Sora, sans-serif' }}
-          >
-            Ready to Transform Your Restaurant?
-          </h2>
+      {/* CTA Banner */}
+<section className="bg-forest text-warm-white py-16">
+  <div className="max-w-3xl mx-auto px-6 text-center">
+    <h2
+      className="text-3xl font-bold mb-4"
+      style={{ fontFamily: 'Sora, sans-serif' }}
+    >
+      Ready to Experience DineFlow?
+    </h2>
 
-          <p className="text-white/70 mb-8 text-base leading-relaxed">
-            Join over 2,400 restaurants already using DineFlow to deliver
-            exceptional guest experiences.
-          </p>
+    <p className="text-white/70 mb-8 text-base leading-relaxed">
+      Explore the menu or manage your restaurant from one simple platform.
+    </p>
 
-          <div className="flex justify-center gap-4 flex-wrap">
-            <button
-              onClick={() => navigate('/register')}
-              className="bg-terracotta hover:bg-terracotta-dark text-warm-white text-sm font-semibold px-8 py-3 rounded-xl transition-colors"
-            >
-              Start Free Trial
-            </button>
-
-            <button className="border border-white/30 hover:border-white/60 text-warm-white text-sm font-medium px-8 py-3 rounded-xl transition-colors">
-              Schedule Demo
-            </button>
-          </div>
-        </div>
-      </section>
+    <div className="flex justify-center">
+      <button
+        onClick={primaryCta.action}
+        className="bg-terracotta hover:bg-terracotta-dark text-warm-white text-sm font-semibold px-8 py-3 rounded-xl transition-colors"
+      >
+        {primaryCta.label}
+      </button>
+    </div>
+  </div>
+</section>
 
       <Footer />
     </div>

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
@@ -82,6 +83,8 @@ export default function MenuDetail() {
       <Navbar />
 
       <div className="w-full px-4 md:px-6 lg:px-8 py-10">
+
+        {/* Back to Menu */}
         <button
           onClick={() => navigate('/menu')}
           className="flex items-center gap-2 text-sm text-sage hover:text-charcoal transition-colors mb-8"
@@ -104,13 +107,16 @@ export default function MenuDetail() {
 
           {/* Image */}
           <div
-            className="rounded-xl overflow-hidden border border-border bg-ivory"
-            style={{ maxHeight: '480px' }}
+            className="rounded-xl overflow-hidden border border-border bg-ivory flex items-center justify-center"
+            style={{
+              minHeight: '320px',
+              maxHeight: '480px'
+            }}
           >
             <img
               src={item.image}
               alt={item.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               style={{
                 minHeight: '320px',
                 maxHeight: '480px'
@@ -124,17 +130,27 @@ export default function MenuDetail() {
             {/* Category + Availability */}
             <div className="flex items-center gap-3 mb-4">
 
-              <span className="text-xs font-semibold uppercase tracking-widest text-terracotta border border-terracotta/30 px-2.5 py-1 rounded-xl">
+              {/* Category */}
+              <span className="text-xs font-semibold uppercase tracking-widest text-terracotta border border-terracotta/30 px-2.5 py-1 rounded-lg">
                 {item.category}
               </span>
 
+              {/* Availability */}
               <span
-                className={`text-xs font-semibold px-2.5 py-1 rounded-xl border ${
+                className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm ${
                   item.availability
-                    ? 'text-success border-success/30 bg-success/8'
-                    : 'text-sage border-border bg-sage/5'
+                    ? 'bg-white text-success border border-success/30'
+                    : 'bg-white text-charcoal border border-charcoal/20'
                 }`}
               >
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    item.availability
+                      ? 'bg-success'
+                      : 'bg-charcoal/40'
+                  }`}
+                />
+
                 {item.availability
                   ? 'Available'
                   : 'Unavailable'}
@@ -155,41 +171,32 @@ export default function MenuDetail() {
               {item.description}
             </p>
 
-            {/* Price + Add to Order */}
-            <div className="border-t border-border pt-6 flex items-center justify-between">
+            {/* Price */}
+            <div className="border-t border-border pt-6">
 
-              <div>
-                <div className="text-xs text-sage mb-1 uppercase tracking-wider">
-                  Price
-                </div>
-
-                <div
-                  className="text-3xl font-bold text-charcoal"
-                  style={{ fontFamily: 'Sora, sans-serif' }}
-                >
-                  ${Number(item.price).toFixed(2)}
-                </div>
+              <div className="text-xs text-sage mb-1 uppercase tracking-wider">
+                Price
               </div>
 
-              {item.availability && (
-                <button
-                  className="bg-forest hover:bg-forest-dark text-warm-white text-sm font-semibold px-6 py-3 rounded-xl transition-colors"
-                >
-                  Add to Order
-                </button>
-              )}
+              <div
+                className="text-3xl font-bold text-charcoal"
+                style={{ fontFamily: 'Sora, sans-serif' }}
+              >
+                ₹{Number(item.price).toFixed(2)}
+              </div>
 
             </div>
 
-            {/* Details */}
+            {/* Dish Details */}
             <div className="mt-8 bg-warm-white border border-border rounded-xl p-5">
 
               <div className="text-xs font-semibold uppercase tracking-wider text-sage mb-4">
                 Dish Details
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-2 gap-5 text-sm">
 
+                {/* Category */}
                 <div>
                   <div className="text-xs text-sage mb-1">
                     Category
@@ -200,9 +207,10 @@ export default function MenuDetail() {
                   </div>
                 </div>
 
+                {/* Availability */}
                 <div>
                   <div className="text-xs text-sage mb-1">
-                    Status
+                    Availability
                   </div>
 
                   <div
@@ -213,28 +221,8 @@ export default function MenuDetail() {
                     }`}
                   >
                     {item.availability
-                      ? 'In Season'
-                      : 'Off Menu'}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-xs text-sage mb-1">
-                    Allergen Info
-                  </div>
-
-                  <div className="text-charcoal font-medium">
-                    Ask your server
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-xs text-sage mb-1">
-                    Preparation
-                  </div>
-
-                  <div className="text-charcoal font-medium">
-                    À la minute
+                      ? 'In Stock'
+                      : 'Out of Stock'}
                   </div>
                 </div>
 
@@ -249,3 +237,4 @@ export default function MenuDetail() {
     </div>
   );
 }
+

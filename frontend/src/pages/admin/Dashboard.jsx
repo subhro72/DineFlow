@@ -1,4 +1,5 @@
 
+import { useAuth } from "../../context/AuthContext";
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import AdminTopbar from '../../components/admin/AdminTopbar';
@@ -57,6 +58,7 @@ export default function Dashboard() {
   const adminCount = users.filter(
     user => user.role === 'Admin'
   ).length;
+  const { user } = useAuth();
 
   return (
     <div className="flex min-h-screen bg-ivory">
@@ -68,7 +70,7 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col lg:ml-56">
         <AdminTopbar
           title="Dashboard"
-          subtitle="Good morning, Eleanor"
+          subtitle={`Hello ${user?.name || "User"}`}
           onMenuToggle={() => setSidebarOpen(o => !o)}
         />
 
@@ -87,8 +89,8 @@ export default function Dashboard() {
             <StatCard
               label="Total Menu Items"
               value={loading ? '...' : totalMenuItems}
-              change="Live from database"
-              positive
+              // change="Live from database"
+              // positive
               icon={
                 <svg
                   width="18"
@@ -129,8 +131,8 @@ export default function Dashboard() {
             <StatCard
               label="Registered Users"
               value={loading ? '...' : users.length}
-              change="Live from database"
-              positive
+              // change="Live from database"
+              // positive
               icon={
                 <svg
                   width="18"

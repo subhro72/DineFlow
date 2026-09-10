@@ -15,8 +15,44 @@ export default function Navbar() {
   const { user, isLoggedIn, logout } = useAuth();
 
   const links = [
-    { label: 'Home', path: '/' },
-    { label: 'Menu', path: '/menu' },
+    {
+      label: 'Home',
+      path: '/',
+      icon: (
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        >
+          <path d="M3 10.5L12 3l9 7.5" />
+          <path d="M5 9.5V21h14V9.5" />
+          <path d="M9 21v-6h6v6" />
+        </svg>
+      ),
+    },
+    {
+      label: 'Menu',
+      path: '/menu',
+      icon: (
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        >
+          <path d="M7 3v8" />
+          <path d="M4 3v5a3 3 0 0 0 6 0V3" />
+          <path d="M7 11v10" />
+          <path d="M17 3v18" />
+          <path d="M17 3c2.2 1.8 3 4.2 3 7 0 2.8-1.2 4-3 4" />
+        </svg>
+      ),
+    },
   ];
 
   const isAdmin = user?.role === 'Admin';
@@ -86,18 +122,22 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-3">
 
           {links.map(link => (
             <Link
               key={link.path}
               to={link.path}
-              className={`text-sm font-medium transition-colors ${
+              className={`group flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200 ${
                 isActive(link.path)
-                  ? 'text-forest font-semibold'
-                  : 'text-charcoal hover:text-forest'
+                  ? 'text-forest font-semibold bg-forest/8'
+                  : 'text-charcoal hover:text-forest hover:bg-forest/5 hover:-translate-y-0.5'
               }`}
             >
+              <span className="transition-transform duration-200 group-hover:scale-110">
+                {link.icon}
+              </span>
+
               {link.label}
             </Link>
           ))}
@@ -106,10 +146,10 @@ export default function Navbar() {
           {isAdmin && (
             <Link
               to="/admin-dashboard"
-              className={`text-sm font-medium transition-colors ${
+              className={`text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200 ${
                 isActive('/admin-dashboard')
-                  ? 'text-forest font-semibold'
-                  : 'text-charcoal hover:text-forest'
+                  ? 'text-forest font-semibold bg-forest/8'
+                  : 'text-charcoal hover:text-forest hover:bg-forest/5 hover:-translate-y-0.5'
               }`}
             >
               Dashboard
@@ -196,7 +236,7 @@ export default function Navbar() {
                         </p>
 
                         <p className="text-xs text-sage">
-                          {user?.name || 'User'}
+                          {user?.role || 'User'}
                         </p>
                       </div>
 
@@ -329,19 +369,23 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-warm-white border-t border-border px-6 py-4 flex flex-col gap-4">
+        <div className="md:hidden bg-warm-white border-t border-border px-6 py-4 flex flex-col gap-3">
 
           {links.map(link => (
             <Link
               key={link.path}
               to={link.path}
               onClick={() => setMenuOpen(false)}
-              className={`text-sm font-medium text-left transition-colors ${
+              className={`group flex items-center gap-2 text-sm font-medium text-left px-3 py-2.5 rounded-lg transition-all duration-200 ${
                 isActive(link.path)
-                  ? 'text-forest font-semibold'
-                  : 'text-charcoal hover:text-forest'
+                  ? 'text-forest font-semibold bg-forest/8'
+                  : 'text-charcoal hover:text-forest hover:bg-forest/5'
               }`}
             >
+              <span className="transition-transform duration-200 group-hover:scale-110">
+                {link.icon}
+              </span>
+
               {link.label}
             </Link>
           ))}
@@ -351,10 +395,10 @@ export default function Navbar() {
             <Link
               to="/admin-dashboard"
               onClick={() => setMenuOpen(false)}
-              className={`text-sm font-medium text-left transition-colors ${
+              className={`text-sm font-medium text-left px-3 py-2.5 rounded-lg transition-all duration-200 ${
                 isActive('/admin-dashboard')
-                  ? 'text-forest font-semibold'
-                  : 'text-charcoal hover:text-forest'
+                  ? 'text-forest font-semibold bg-forest/8'
+                  : 'text-charcoal hover:text-forest hover:bg-forest/5'
               }`}
             >
               Dashboard
