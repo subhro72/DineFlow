@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Sora", sans-serif;
+  
+  --font-sora: "Sora", sans-serif;
+  --font-inter: "Inter", sans-serif;
+
+  --color-background: #F6F2EA;
+  --color-surface: #FFFCF7;
+  
+  --color-primary: #315C4A;
+  --color-primary-dark: #234536;
+  --color-accent: #C65A38;
+  
+  --color-ink-deep: #202722;
+  --color-ink-muted: #69716B;
+  
+  --color-border-warm: #DED8CE;
+  --color-success: #527A65;
+
+  /* Figma specific colors */
+  --color-ivory: #F6F2EA;
+  --color-warm-white: #FFFCF7;
+  --color-forest: #315C4A;
+  --color-forest-dark: #234536;
+  --color-terracotta: #C65A38;
+  --color-terracotta-dark: #A84B2E;
+  --color-charcoal: #202722;
+  --color-sage: #69716B;
+  --color-border: #DED8CE;
+
+  /* Subtle Shadows */
+  --shadow-level-1: 0 4px 14px rgba(49, 92, 74, 0.05), 0 1px 3px rgba(32, 39, 34, 0.03);
+  --shadow-level-2: 0 10px 30px rgba(49, 92, 74, 0.06), 0 4px 10px rgba(32, 39, 34, 0.04);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-ink-deep);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  /* Default to sans, use serif explicitly where needed per instructions */
+  font-family: var(--font-sans);
+}
