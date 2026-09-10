@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -246,28 +245,40 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats bar */}
+      {/* Platform Highlights */}
       <section className="bg-warm-white border-y border-border">
         <div className="w-full px-4 md:px-6 lg:px-8 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x divide-border">
           {[
-            { num: '2,400+', label: 'Restaurants' },
-            { num: '18M', label: 'Covers Served' },
-            { num: '98%', label: 'Uptime SLA' },
-            { num: '4.9★', label: 'Average Rating' },
-          ].map((stat) => (
+            {
+              title: 'Menu Management',
+              desc: 'Manage dishes, prices, and availability',
+            },
+            {
+              title: 'Role-Based Access',
+              desc: 'Separate Admin and User permissions',
+            },
+            {
+              title: 'Cloud Image Storage',
+              desc: 'Secure menu images with Cloudinary',
+            },
+            {
+              title: 'Secure Authentication',
+              desc: 'JWT-based protected access',
+            },
+          ].map((feature) => (
             <div
-              key={stat.label}
+              key={feature.title}
               className="text-center md:px-8"
             >
               <div
-                className="text-2xl font-bold text-charcoal mb-1"
+                className="text-sm font-semibold text-charcoal mb-1"
                 style={{ fontFamily: 'Sora, sans-serif' }}
               >
-                {stat.num}
+                {feature.title}
               </div>
 
-              <div className="text-xs text-sage uppercase tracking-wider">
-                {stat.label}
+              <div className="text-xs text-sage leading-relaxed">
+                {feature.desc}
               </div>
             </div>
           ))}
