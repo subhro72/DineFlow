@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
@@ -17,6 +18,10 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  // Password visibility states
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -208,18 +213,63 @@ export default function Register() {
                   Password
                 </label>
 
-                <input
-                  type="password"
-                  value={form.password}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      password: e.target.value
-                    }))
-                  }
-                  placeholder="Min. 8 characters"
-                  className="w-full px-3 py-2.5 text-sm border border-border rounded-xl bg-ivory text-charcoal placeholder-sage focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest/20 transition-colors"
-                />
+                <div className="relative">
+
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={form.password}
+                    onChange={(e) =>
+                      setForm((f) => ({
+                        ...f,
+                        password: e.target.value
+                      }))
+                    }
+                    placeholder="Min. 8 characters"
+                    className="w-full px-3 py-2.5 pr-10 text-sm border border-border rounded-xl bg-ivory text-charcoal placeholder-sage focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest/20 transition-colors"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sage hover:text-charcoal transition-colors"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      // Eye Off
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3 3l18 18" />
+                        <path d="M10.58 10.58a2 2 0 0 0 2.83 2.83" />
+                        <path d="M9.88 4.24A9.77 9.77 0 0 1 12 4c5 0 8.5 4 9.5 8a12.8 12.8 0 0 1-2.1 3.78" />
+                        <path d="M6.61 6.61C4.62 7.83 3.25 9.78 2.5 12c1 4 4.5 8 9.5 8a9.7 9.7 0 0 0 4.39-1.04" />
+                      </svg>
+                    ) : (
+                      // Eye
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+
+                </div>
 
               </div>
 
@@ -230,18 +280,63 @@ export default function Register() {
                   Confirm Password
                 </label>
 
-                <input
-                  type="password"
-                  value={form.confirm}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      confirm: e.target.value
-                    }))
-                  }
-                  placeholder="Re-enter password"
-                  className="w-full px-3 py-2.5 text-sm border border-border rounded-xl bg-ivory text-charcoal placeholder-sage focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest/20 transition-colors"
-                />
+                <div className="relative">
+
+                  <input
+                    type={showConfirm ? "text" : "password"}
+                    value={form.confirm}
+                    onChange={(e) =>
+                      setForm((f) => ({
+                        ...f,
+                        confirm: e.target.value
+                      }))
+                    }
+                    placeholder="Re-enter password"
+                    className="w-full px-3 py-2.5 pr-10 text-sm border border-border rounded-xl bg-ivory text-charcoal placeholder-sage focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest/20 transition-colors"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sage hover:text-charcoal transition-colors"
+                    aria-label={showConfirm ? "Hide password" : "Show password"}
+                  >
+                    {showConfirm ? (
+                      // Eye Off
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3 3l18 18" />
+                        <path d="M10.58 10.58a2 2 0 0 0 2.83 2.83" />
+                        <path d="M9.88 4.24A9.77 9.77 0 0 1 12 4c5 0 8.5 4 9.5 8a12.8 12.8 0 0 1-2.1 3.78" />
+                        <path d="M6.61 6.61C4.62 7.83 3.25 9.78 2.5 12c1 4 4.5 8 9.5 8a9.7 9.7 0 0 0 4.39-1.04" />
+                      </svg>
+                    ) : (
+                      // Eye
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+
+                </div>
 
               </div>
 
