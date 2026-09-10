@@ -462,13 +462,13 @@ export default function EditMenuItem() {
                 <div>
 
                   <label className="block text-xs font-semibold text-charcoal mb-1.5 uppercase tracking-wider">
-                    Price (USD) <span className="text-terracotta">*</span>
+                    Price (INR) <span className="text-terracotta">*</span>
                   </label>
 
                   <div className="relative">
 
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sage text-sm">
-                      $
+                      ₹
                     </span>
 
                     <input
@@ -645,4 +645,3 @@ export default function EditMenuItem() {
     </div>
   );
 }
-

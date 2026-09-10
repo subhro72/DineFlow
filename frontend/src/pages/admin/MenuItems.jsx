@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../../components/admin/AdminSidebar';
@@ -277,7 +278,7 @@ export default function MenuItems() {
                           <td className="px-4 py-3.5">
 
                             <span className="text-sm font-semibold text-charcoal">
-                              ${Number(item.price).toFixed(2)}
+                              ₹{Number(item.price).toFixed(2)}
                             </span>
 
                           </td>
@@ -421,3 +422,4 @@ export default function MenuItems() {
     </div>
   );
 }
+
