@@ -7,10 +7,13 @@ const errorMiddleware = require("./middleware/error.middleware");
 const app = express();
 const cors = require("cors");
 app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "https://dineflow-project.vercel.app/",
+        ],
+        credentials: true,
+    })
 );
 
 app.use(express.json());
