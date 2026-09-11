@@ -143,9 +143,9 @@ export default function Register() {
                 Create your account
               </h1>
 
-              <p className="text-sm text-sage">
+              {/* <p className="text-sm text-sage">
                 Start your 14-day free trial — no card required
-              </p>
+              </p> */}
 
             </div>
 
