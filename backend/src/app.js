@@ -3,8 +3,10 @@ const authRoutes = require('./routes/auth.routes')
 const menuRoutes = require('./routes/menu.routes')
 const userRoutes = require("./routes/user.routes");
 const errorMiddleware = require("./middleware/error.middleware");
+const helmet = require('helmet')
 
 const app = express();
+app.use(helmet());
 const cors = require("cors");
 app.use(
   cors({
